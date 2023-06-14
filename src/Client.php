@@ -124,7 +124,7 @@ class Client
      * @return Results
      * @throws QueryError
      */
-    public function runRawQuery(string $queryString, $resultsAsArray = false, array $variables = []): Results
+    public function runRawQuery(string $queryString, $resultsAsArray = false, array $variables = [], $provideRawResponse=FALSE): Results
     {
         $request = new Request($this->requestMethod, $this->endpointUrl);
 
@@ -154,6 +154,9 @@ class Client
             if ($response->getStatusCode() !== 400) {
                 throw $exception;
             }
+        }
+        if ($provideRawResponse) {
+            return $response->getBody()->getContents();
         }
 
         // Parse response to extract results
